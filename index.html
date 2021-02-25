@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>The Todo Tracker - the Todo List Making App</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Exa&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/todo_layout.css" />
+    <link rel="stylesheet" type="text/css" href="./css/todo_style.css" />
+    <script type="module" src="./src/todo/ToDoTrackerApp.js"></script>
+</head>
+
+<body>
+    <div id="grid-container">
+        <div id="navbar" class="grid-item">
+            <div id="title">
+                Todo Tracker
+            </div>
+        </div>
+        <div id="sub-container">
+            <div id="sidebar" class="grid-item">
+                <div id="sidebar-header" class="grid-item">
+                    <p class="sidebar-header-text">Todolists</p>
+                    <span class="sidebar-controls" id="add-undo-redo-box">
+                        <span id="add-list" class="material-icons todo_button">add_box</span>
+                        <span id="undo" class="material-icons todo_button">undo</span>
+                        <span id="redo" class="material-icons todo_button">redo</span>
+                    </span>
+                </div>
+                <div id="lists-list" class="grid-item"></div>
+            </div>
+            <div id="workspace" class="grid-item">
+                <div id="main-header" class="list-item-card">
+                    <p id="header-col-text" class="task-col">Task</p>
+                    <p id="header-col-text" class="due-date-col">Due Date</p>
+                    <p id="header-col-text" class="status-col">Status</p>
+                    <span class="main-controls">
+                        <span id="add-item-button" class="list-item-control material-icons todo_button">add_box</span>
+                        <span id="delete-list-button" class="list-item-control material-icons todo_button">delete</span>
+                        <span id="close-list-button" class="list-item-control material-icons todo_button">close</span>
+                    </span>
+                </div>
+                <div id="list-items"></div>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

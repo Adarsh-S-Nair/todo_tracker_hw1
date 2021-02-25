@@ -1,0 +1,138 @@
+body {
+    overflow: hidden;
+}
+
+#sub-container {
+    display: flex;
+    margin: 0.5% 0.5%;
+}
+
+#navbar {
+    min-height: 40px;
+    margin: 0.5vh 0.5vw;
+    padding: 0.3vh;
+    height: 4vh;
+}
+
+#title {
+    user-select: none;
+    padding: 1vh;
+}
+
+#sidebar {
+    user-select: none;
+    min-width: 220px;
+    max-width: 300px;
+    width: 20vw;
+}
+
+#sidebar-header {
+    height: 60px;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
+
+.sidebar-header-text {
+    padding: 0.5vh;
+}
+
+.sidebar-controls{
+    padding: 0vw 20%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+
+[id^="list-context-menu-"] {
+    position: absolute;
+    text-align: center;
+}
+
+[id^="list-context-menu-"] ul {
+    padding: 0px;
+    margin: 0px;
+    min-width: 100px;
+    list-style: none;
+}
+
+[id^="list-context-menu-"] ul li {
+    padding-bottom: 7px;
+    padding-top: 7px;
+}
+
+.list {
+    padding: 15px;
+    text-align: center;
+}
+
+
+#main-header{
+    user-select: none;
+    height: 60px;
+    width: 95%;
+    text-align: left;
+    padding: 5px;
+}
+
+#header-col-text{
+    padding: 0.5vh 0vh 0vh 1vh;
+}
+
+#workspace {
+    display: flex;
+    float: left;
+    width: 93%;
+    flex-direction: column;
+    align-items: center;
+}
+
+#list-items{
+    width: 95%;
+    height: 86vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-card {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+}
+
+.list-item-control {
+    user-select: none;
+    min-width: 10px;
+    max-width: 20px;
+    padding: 0.3vw;
+}
+
+#header-col-text{
+    width: 25%;
+}
+
+.task-col {
+    width:25%;
+}
+
+.due-date-col {
+    width:25%;
+}
+
+.status-col {
+    width:25%
+}
+
+.main-controls{
+    align-items: center;
+    display: flex;
+    padding: 0.9vw;
+    min-width: 100px;
+    max-width: 1000px;
+    width:25%;
+}
+
+.list-item-control {
+    width: 20%;
+}
