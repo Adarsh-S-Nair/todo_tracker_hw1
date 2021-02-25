@@ -134,7 +134,7 @@ export default class ToDoModel {
             this.currentList = this.toDoLists[listIndex];
             this.view.viewList(this.currentList);
             this.moveListToTop(this.currentList);
-            //this.view.refreshLists(this.toDoLists);
+            this.view.refreshLists(this.toDoLists);
         }
     }
 

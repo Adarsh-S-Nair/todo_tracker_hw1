@@ -19,10 +19,6 @@ export default class ToDoView {
         listElement.setAttribute("id", newListId);
         listElement.setAttribute("class", "todo_button list");
 
-        listElement.ondblclick = () => {
-            listElement.contentEditable = true;
-        }
-
         /*listElement.oncontextmenu = (e) => {
             var contextMenus = document.querySelectorAll('[id^="list-context-menu-"]');
             for(let i = 0; i < contextMenus.length; i++){
@@ -61,6 +57,11 @@ export default class ToDoView {
         if(newList.getSelected() === true){
             listElement.style.backgroundColor = "#40454e";
             listElement.style.color = "#ffc819";
+
+            listElement.ondblclick = () => {
+                listElement.contentEditable = true;
+                listElement.focus();
+            }
         }
 
         listElement.appendChild(document.createTextNode(newList.name));
@@ -69,7 +70,7 @@ export default class ToDoView {
         // SETUP THE HANDLER FOR WHEN SOMEONE MOUSE CLICKS ON OUR LIST
         let thisController = this.controller;
         listElement.onmousedown = function(event) {
-            if(event.which === 1){
+            if(newList.getSelected() != true && event.which === 1) {
                 thisController.handleLoadList(newList.id);
             }
         }
@@ -142,7 +143,49 @@ export default class ToDoView {
         for (let i = 0; i < list.items.length; i++) {
             // NOW BUILD ALL THE LIST ITEMS
             let listItem = list.items[i];
-            let listItemElement = "<div id='todo-list-item-" + listItem.id + "' class='list-item-card'>"
+
+            let listItemElement = document.createElement("div");
+            listItemElement.setAttribute("id", "todo-list-item-" + listItem.id);
+            listItemElement.setAttribute("class", "list-item-card");
+
+            let taskElement = document.createElement("div");
+            taskElement.setAttribute("class", "task-col");
+            taskElement.innerHTML += listItem.description;
+            taskElement.onclick = () => {
+                taskElement.contentEditable = true;
+                taskElement.focus();
+            }
+            taskElement.onblur = () => {
+                if(taskElement.innerHTLM = ''){
+                    taskElement.innerHTML = "No Description";
+                }
+                listItem.setDescription(taskElement.innerHTML);
+                taskElement.contentEditable = false;
+                console.log(listItem.getDescription());
+            }
+            taskElement.addEventListener("keydown", (e) => {
+                if(e.keyCode === 13){
+                    taskElement.blur();
+                }
+            });
+            listItemElement.appendChild(taskElement);
+
+            let dateElement = document.createElement("div");
+            dateElement.setAttribute("class", "due-date-col");
+            dateElement.innerHTML += listItem.dueDate;
+            dateElement.onclick = () => {
+                
+            };
+            listItemElement.appendChild(dateElement);
+
+            let statusElement = document.createElement("div");
+            statusElement.setAttribute("class", "status-col");
+            statusElement.innerHTML += listItem.status;
+            listItemElement.appendChild(statusElement);
+
+
+
+            /*let listItemElement = "<div id='todo-list-item-" + listItem.id + "' class='list-item-card'>"
                                 + "<div class='task-col'>" + listItem.description + "</div>"
                                 + "<div class='due-date-col'>" + listItem.dueDate + "</div>"
                                 + "<div class='status-col'>" + listItem.status + "</div>"
@@ -151,7 +194,9 @@ export default class ToDoView {
                                 + " <div class='list-item-control material-icons'>keyboard_arrow_down</div>"
                                 + " <div class='list-item-control material-icons'>close</div>"
                                 + "</div>";
-            itemsListDiv.innerHTML += listItemElement;
+            itemsListDiv.innerHTML += listItemElement;*/
+
+            itemsListDiv.appendChild(listItemElement);
         }
     }
 
