@@ -213,13 +213,13 @@ export default class ToDoView {
 
             let listControls = document.createElement("div");
             let upArrow = document.createElement("div");
-            upArrow.setAttribute("class", "list-item-control material-icons");
+            upArrow.setAttribute("class", "list-item-control material-icons control_button");
             upArrow.innerText = "keyboard_arrow_up";
             let downArrow = document.createElement("div");
-            downArrow.setAttribute("class", "list-item-control material-icons");
+            downArrow.setAttribute("class", "list-item-control material-icons control_button");
             downArrow.innerText = "keyboard_arrow_down";
             let close = document.createElement("div");
-            close.setAttribute("class", "list-item-control material-icons");
+            close.setAttribute("class", "list-item-control material-icons control_button");
             close.innerText = "close";
 
             listControls.appendChild(upArrow);

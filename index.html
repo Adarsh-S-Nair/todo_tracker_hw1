@@ -12,6 +12,13 @@
 </head>
 
 <body>
+    <div id="delete-confirmation" style="display: none;">
+        <h3 id="delete-message">Are you sure you want to delete this list?</h3>
+        <div id="popup-options">
+            <button id="cancel-button" class="control_button">Cancel</button>
+            <button id="confirm-delete" class="control_button">Confirm</button>
+        </div>
+    </div>
     <div id="grid-container">
         <div id="navbar" class="grid-item">
             <div id="title">
@@ -23,9 +30,9 @@
                 <div id="sidebar-header" class="grid-item">
                     <p class="sidebar-header-text">Todolists</p>
                     <span class="sidebar-controls" id="add-undo-redo-box">
-                        <span id="add-list" class="material-icons todo_button">add_box</span>
-                        <span id="undo" class="material-icons todo_button">undo</span>
-                        <span id="redo" class="material-icons todo_button">redo</span>
+                        <span id="add-list" class="material-icons control_button">add_box</span>
+                        <span id="undo" class="material-icons control_button">undo</span>
+                        <span id="redo" class="material-icons control_button">redo</span>
                     </span>
                 </div>
                 <div id="lists-list" class="grid-item"></div>
@@ -36,9 +43,9 @@
                     <p id="header-col-text" class="due-date-col">Due Date</p>
                     <p id="header-col-text" class="status-col">Status</p>
                     <span class="main-controls">
-                        <span id="add-item-button" class="list-item-control material-icons todo_button">add_box</span>
-                        <span id="delete-list-button" class="list-item-control material-icons todo_button">delete</span>
-                        <span id="close-list-button" class="list-item-control material-icons todo_button">close</span>
+                        <span id="add-item-button" class="list-item-control material-icons control_button">add_box</span>
+                        <span id="delete-list-button" class="list-item-control material-icons control_button">delete</span>
+                        <span id="close-list-button" class="list-item-control material-icons control_button">close</span>
                     </span>
                 </div>
                 <div id="list-items"></div>

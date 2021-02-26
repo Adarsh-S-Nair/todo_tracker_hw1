@@ -162,6 +162,25 @@ export default class ToDoModel {
         this.view.viewList(this.currentList);
     }
 
+    deleteListConfirmation() {
+        let overlay = document.createElement("div");
+        overlay.className += "overlay";
+        document.body.appendChild(overlay);
+        let popup = document.getElementById("delete-confirmation");
+        popup.style.display = "block";
+        let cancel = document.getElementById("cancel-button");
+        cancel.onclick = () => {
+            document.body.removeChild(overlay);
+            popup.style.display = "none";
+        };
+        let confirm = document.getElementById("confirm-delete");
+        confirm.onclick = () => {
+            document.body.removeChild(overlay);
+            popup.style.display = "none";
+            this.removeCurrentList();
+        };
+    }
+
     /**
      * Finds and then removes the current list.
      */
