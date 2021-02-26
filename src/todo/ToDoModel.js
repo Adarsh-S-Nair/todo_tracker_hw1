@@ -131,6 +131,7 @@ export default class ToDoModel {
             }
         }
         if (listIndex >= 0) {
+            this.view.listControlsVisible(true);
             this.currentList = this.toDoLists[listIndex];
             this.view.viewList(this.currentList);
             this.moveListToTop(this.currentList);
@@ -175,6 +176,7 @@ export default class ToDoModel {
         };
         let confirm = document.getElementById("confirm-delete");
         confirm.onclick = () => {
+            this.view.listControlsVisible(false);
             document.body.removeChild(overlay);
             popup.style.display = "none";
             this.removeCurrentList();
@@ -193,6 +195,18 @@ export default class ToDoModel {
         }
         this.toDoLists.splice(indexOfList, 1);
         this.currentList = null;
+        this.view.clearItemsList();
+        this.view.refreshLists(this.toDoLists);
+    }
+
+    closeList() {
+        for(let i = 0; i < this.toDoLists.length; i++ ){
+            if(this.toDoLists[i].getSelected() === true) {
+                this.toDoLists[i].setSelected(false);
+            }
+        }
+        this.currentList = null;
+        this.view.listControlsVisible(false);
         this.view.clearItemsList();
         this.view.refreshLists(this.toDoLists);
     }

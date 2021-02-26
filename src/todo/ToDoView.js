@@ -61,6 +61,22 @@ export default class ToDoView {
         }
     }
 
+    listControlsVisible(bool) {
+        let addItem = document.getElementById("add-item-button");
+        let deleteList = document.getElementById("delete-list-button");
+        let closeList = document.getElementById("close-list-button");
+        if  (bool) {
+            addItem.style.display = "block";
+            deleteList.style.display = "block";
+            closeList.style.display = "block";
+        }
+        else {
+            addItem.style.display = "none";
+            deleteList.style.display = "none";
+            closeList.style.display = "none";
+        }
+    }
+
     // REMOVES ALL THE LISTS FROM THE LEFT SIDEBAR
     clearItemsList() {
         let itemsListDiv = document.getElementById("list-items");
@@ -189,6 +205,13 @@ export default class ToDoView {
                 statusOptions.appendChild(completeOption);
                 statusOptions.appendChild(incompleteOption);
 
+                if(listItem.status == "complete"){
+                    statusOptions.value = "complete";
+                }
+                else{
+                    statusOptions.value = "incomplete";
+                }
+
                 statusOptions.onblur = () => {
                     listItem.setStatus(statusOptions.value);
                     statusElement.innerHTML = listItem.status;
@@ -212,15 +235,56 @@ export default class ToDoView {
             listItemElement.appendChild(statusElement);
 
             let listControls = document.createElement("div");
+            listControls.setAttribute("id", "list-controls");
             let upArrow = document.createElement("div");
             upArrow.setAttribute("class", "list-item-control material-icons control_button");
             upArrow.innerText = "keyboard_arrow_up";
+            if(listItem === list.items[0]){
+                upArrow.style.filter = "invert(0.6)";
+                upArrow.style.cursor = "default";
+            }
+            else {
+                upArrow.onclick = () => {
+                    let index = -1;
+                    for(let i = 0; (i < list.items.length) && (index < 0); i++){
+                        if(listItem === list.items[i]){
+                            index = i;
+                        }
+                    }
+                    let temp = listItem;
+                    list.items[i] = list.items[i-1];
+                    list.items[i-1] = temp;
+                    this.viewList(list);
+                };
+            }
             let downArrow = document.createElement("div");
             downArrow.setAttribute("class", "list-item-control material-icons control_button");
             downArrow.innerText = "keyboard_arrow_down";
+            if (listItem == list.items[list.items.length-1]) {
+                downArrow.style.filter = "invert(0.6)";
+                downArrow.style.cursor = "default";
+            }
+            else {
+                downArrow.onclick = () => {
+                    let index = -1;
+                    for(let i = 0; (i < list.items.length) && (index < 0); i++){
+                        if(listItem === list.items[i]){
+                            index = i;
+                        }
+                    }
+                    let temp = listItem;
+                    list.items[i] = list.items[i+1];
+                    list.items[i+1] = temp;
+                    this.viewList(list);
+                };
+            }
             let close = document.createElement("div");
             close.setAttribute("class", "list-item-control material-icons control_button");
             close.innerText = "close";
+            close.onclick = () => {
+                list.removeItem(listItem);
+                this.viewList(list);
+            };
 
             listControls.appendChild(upArrow);
             listControls.appendChild(downArrow);

@@ -9,8 +9,8 @@ body {
 
 #delete-confirmation{
     position: absolute;
-    top: 30%;
     left: 50%;
+    top: 30%;
     transform: translate(-50%, -50%);
     padding: 30px 20px;
 }
@@ -53,7 +53,7 @@ body {
 }
 
 .sidebar-header-text {
-    padding: 0.5vh;
+    padding: 10px;
 }
 
 .sidebar-controls{
@@ -130,6 +130,10 @@ body {
     overflow:auto;
 }
 
+#list-controls {
+    padding: 15px 0px 15px 20px;
+}
+
 input[type="text"] {
     width: 25%;
 }
@@ -180,6 +184,18 @@ select {
     display: flex;
     padding-left: 2vw;
     width:25%;
+}
+
+#add-item-button {
+    display: none;
+}
+
+#delete-list-button {
+    display: none;
+}
+
+#close-list-button {
+    display: none;
 }
 
 .list-item-control {

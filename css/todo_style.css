@@ -32,6 +32,7 @@ body{
 }
 
 #delete-confirmation {
+    display: none;
     user-select: none;
     background-color: var(--swatch-complement);
     box-sizing: border-box;
@@ -39,6 +40,13 @@ body{
     z-index: 10;
     text-align: center;
     color: var(--swatch-text);
+    animation-name: modalanimation;
+    animation-duration: 0.4s;
+}
+
+@keyframes modalanimation {
+    from {top: -300px; opacity: 0}
+    to {top: 30%; opacity: 1}
 }
 
 #popup-options * {
