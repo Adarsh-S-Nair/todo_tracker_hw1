@@ -27,7 +27,7 @@ body {
 }
 
 #sidebar-header {
-    height: 60px;
+    height: 75px;
     padding: 5px;
     display: grid;
     grid-template-columns: 60% 40%;
@@ -38,12 +38,22 @@ body {
 }
 
 .sidebar-controls{
-    padding: 0vw 20%;
+    padding: 0vw 0%;
     display: flex;
     align-items: center;
     position: relative;
 }
 
+#add-list {
+    padding: 0px 0.2vh
+}
+
+#undo {
+    padding: 0px 0.2vh
+}
+#redo {
+    padding: 0px 0.2vh
+}
 
 [id^="list-context-menu-"] {
     position: absolute;
@@ -63,6 +73,7 @@ body {
 }
 
 .list {
+    overflow-wrap: break-word;
     padding: 15px;
     text-align: center;
 }
@@ -70,14 +81,14 @@ body {
 
 #main-header{
     user-select: none;
-    height: 60px;
+    height: 75px;
     width: 95%;
     text-align: left;
     padding: 5px;
 }
 
 #header-col-text{
-    padding: 0.5vh 0vh 0vh 1vh;
+    padding: 10px 0px;
 }
 
 #workspace {
@@ -90,22 +101,34 @@ body {
 
 #list-items{
     width: 95%;
-    height: 86vh;
+    height: 85vh;
     display: flex;
     flex-direction: column;
+}
+
+input[type="text"] {
+    width: 25%;
+}
+
+input[type="date"] {
+    width: 25%;
+}
+
+select {
+    width: 25%;
 }
 
 .list-item-card {
     display: flex;
     flex-direction: row;
-    padding: 20px;
+    min-height: 75px;
 }
 
 .list-item-control {
     user-select: none;
     min-width: 10px;
     max-width: 20px;
-    padding: 0.3vw;
+    padding: 0.6vw;
 }
 
 #header-col-text{
@@ -113,15 +136,19 @@ body {
 }
 
 .task-col {
-    width:25%;
+    overflow-wrap: break-word;
+    width:24.5%;
+    padding: 25px 0px;
 }
 
 .due-date-col {
-    width:25%;
+    width:24.5%;
+    padding: 25px 0px;
 }
 
 .status-col {
-    width:25%
+    width:24.5%;
+    padding: 25px 0px;
 }
 
 .main-controls{

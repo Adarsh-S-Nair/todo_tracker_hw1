@@ -19,30 +19,15 @@ export default class ToDoView {
         listElement.setAttribute("id", newListId);
         listElement.setAttribute("class", "todo_button list");
 
-        /*listElement.oncontextmenu = (e) => {
-            var contextMenus = document.querySelectorAll('[id^="list-context-menu-"]');
-            for(let i = 0; i < contextMenus.length; i++){
-                if(contextMenus[i].style.display == 'block'){
-                    contextMenus[i].style.display = 'none';
-                }
-            }
-            e.preventDefault();
-            this.buildListContextMenu(listElement, newList.id);
-            var menu = document.getElementById("list-context-menu-" + newList.id);
-            menu.style.display = 'block';
-            menu.style.left = e.pageX + "px";
-            menu.style.top = e.pageY + "px";
-        };*/
-
         // UPDATE LIST NAME ON BLUR
         listElement.onblur = () => {
             if(listElement.innerHTML == ""){
                 newList.setName("Untitled");
-                listElement.innerHTML = "Untitled";
             }
             else{
                 newList.setName(listElement.innerHTML);
             }
+            listElement.innerHTML = newList.name;
             listElement.contentEditable = false;
             console.log(newList.getName());
         }
@@ -56,7 +41,7 @@ export default class ToDoView {
 
         if(newList.getSelected() === true){
             listElement.style.backgroundColor = "#40454e";
-            listElement.style.color = "#ffc819";
+            listElement.setAttribute("class", "selected-list todo_button list");
 
             listElement.ondblclick = () => {
                 listElement.contentEditable = true;
@@ -74,40 +59,6 @@ export default class ToDoView {
                 thisController.handleLoadList(newList.id);
             }
         }
-    }
-
-    buildListContextMenu(listElement, id) {
-        var menuId = "list-context-menu-" + id;
-        var contextMenu = document.createElement("div");
-        contextMenu.setAttribute("id", menuId);
-        contextMenu.setAttribute("style", 'display:none');
-        var menu = document.createElement("ul");
-
-        var rename = document.createElement("li");
-        rename.setAttribute("id", "rename-" + id);
-        rename.setAttribute("class", "todo_button");
-        rename.setAttribute("style", "user-select: none;");
-        rename.onmousedown = function() {
-            if(event.which === 1){
-                listElement.contentEditable = true;
-                rename.contentEditable = false;
-                del.contentEditable = false;
-            }
-        }
-        rename.innerHTML = "Rename";
-
-        var del = document.createElement("li");
-        del.setAttribute("id", "delete-" + id);
-        del.setAttribute("class", "todo_button");
-        del.onmousedown = function() {
-            
-        }
-        del.innerHTML = "Delete";
-
-        menu.appendChild(rename);
-        menu.appendChild(del);
-        contextMenu.appendChild(menu);
-        listElement.appendChild(contextMenu);
     }
 
     // REMOVES ALL THE LISTS FROM THE LEFT SIDEBAR
@@ -144,57 +95,138 @@ export default class ToDoView {
             // NOW BUILD ALL THE LIST ITEMS
             let listItem = list.items[i];
 
+            // BUILD THE LIST ITEM DIV
             let listItemElement = document.createElement("div");
             listItemElement.setAttribute("id", "todo-list-item-" + listItem.id);
             listItemElement.setAttribute("class", "list-item-card");
 
+            // BUILD THE TASK ELEMENT AND MAKE IT EDITABLE ON CLICK
             let taskElement = document.createElement("div");
             taskElement.setAttribute("class", "task-col");
             taskElement.innerHTML += listItem.description;
-            taskElement.onclick = () => {
-                taskElement.contentEditable = true;
-                taskElement.focus();
-            }
-            taskElement.onblur = () => {
-                if(taskElement.innerHTLM = ''){
-                    taskElement.innerHTML = "No Description";
+            taskElement.onclick = createTaskInput;
+
+            function createTaskInput(){
+                let taskInput = document.createElement("input");
+                taskInput.type = "text";
+                taskInput.value = listItem.description;
+                listItemElement.replaceChild(taskInput, taskElement);
+                taskInput.focus();
+                taskInput.onblur = () => {
+                    if(taskInput.value == ""){
+                        listItem.setDescription("No Description");
+                    }
+                    else{
+                        listItem.setDescription(taskInput.value);
+                    }
+                    taskElement.innerHTML = listItem.description;
+                    listItemElement.replaceChild(taskElement, taskInput);
+                    console.log(listItem.description);
+                    taskElement.onclick = createTaskInput;
                 }
-                listItem.setDescription(taskElement.innerHTML);
-                taskElement.contentEditable = false;
-                console.log(listItem.getDescription());
+                taskInput.addEventListener("keydown", (e) => {
+                    if(e.keyCode === 13){
+                        taskInput.blur();
+                    }
+                });
             }
-            taskElement.addEventListener("keydown", (e) => {
-                if(e.keyCode === 13){
-                    taskElement.blur();
-                }
-            });
+
             listItemElement.appendChild(taskElement);
 
+            // BUILD THE DATE ELEMENT AND MAKE IT EDITABLE ON CLICK
             let dateElement = document.createElement("div");
             dateElement.setAttribute("class", "due-date-col");
             dateElement.innerHTML += listItem.dueDate;
-            dateElement.onclick = () => {
-                
+            dateElement.onclick = createDatePicker;
+
+            function createDatePicker() {
+                let datePicker = document.createElement("input");
+                datePicker.type = "date";
+                datePicker.value = listItem.getDueDate();
+                listItemElement.replaceChild(datePicker, dateElement);
+                datePicker.focus();
+                datePicker.onblur = () => {
+                    if(datePicker.value == ""){
+                        listItem.setDueDate("No Date");
+                    }
+                    else{
+                        listItem.setDueDate(datePicker.value);
+                    }
+                    dateElement.innerHTML = listItem.dueDate;
+                    listItemElement.replaceChild(dateElement, datePicker);
+                    console.log(listItem.getDueDate());
+                    dateElement.onclick = createDatePicker;
+                };
+                datePicker.addEventListener("keydown", (e) => {
+                    if(e.keyCode === 13){
+                        datePicker.blur();
+                    }
+                });
             };
+
             listItemElement.appendChild(dateElement);
 
+            // BUILD THE STATUS ELEMENT AND MAKE IT EDITABLE ON CLICK
             let statusElement = document.createElement("div");
-            statusElement.setAttribute("class", "status-col");
+            if(listItem.status == "complete"){
+                statusElement.setAttribute("class", "status-col complete");   
+            }
+            else{
+                statusElement.setAttribute("class", "status-col incomplete"); 
+            }
             statusElement.innerHTML += listItem.status;
+            statusElement.onclick = createStatusOptions;
+            
+            function createStatusOptions() {
+                let statusOptions = document.createElement("select");
+                listItemElement.replaceChild(statusOptions, statusElement);
+                statusOptions.focus();
+
+                let completeOption = document.createElement("option");
+                completeOption.innerText = "complete";
+                let incompleteOption = document.createElement("option");
+                incompleteOption.innerText = "incomplete";
+                statusOptions.appendChild(completeOption);
+                statusOptions.appendChild(incompleteOption);
+
+                statusOptions.onblur = () => {
+                    listItem.setStatus(statusOptions.value);
+                    statusElement.innerHTML = listItem.status;
+                    listItemElement.replaceChild(statusElement, statusOptions);
+                    if(listItem.status == "complete"){
+                        statusElement.setAttribute("class", "status-col complete");   
+                    }
+                    else{
+                        statusElement.setAttribute("class", "status-col incomplete"); 
+                    }
+                    console.log(listItem.getStatus());
+                    statusElement.onclick = createStatusOptions;
+                };
+                statusOptions.addEventListener("keydown", (e) => {
+                    if(e.keyCode === 13){
+                        statusOptions.blur();
+                    }
+                });
+            };
+
             listItemElement.appendChild(statusElement);
 
+            let listControls = document.createElement("div");
+            let upArrow = document.createElement("div");
+            upArrow.setAttribute("class", "list-item-control material-icons");
+            upArrow.innerText = "keyboard_arrow_up";
+            let downArrow = document.createElement("div");
+            downArrow.setAttribute("class", "list-item-control material-icons");
+            downArrow.innerText = "keyboard_arrow_down";
+            let close = document.createElement("div");
+            close.setAttribute("class", "list-item-control material-icons");
+            close.innerText = "close";
 
+            listControls.appendChild(upArrow);
+            listControls.appendChild(downArrow);
+            listControls.appendChild(close);
 
-            /*let listItemElement = "<div id='todo-list-item-" + listItem.id + "' class='list-item-card'>"
-                                + "<div class='task-col'>" + listItem.description + "</div>"
-                                + "<div class='due-date-col'>" + listItem.dueDate + "</div>"
-                                + "<div class='status-col'>" + listItem.status + "</div>"
-                                + "<div class='list-controls-col'>"
-                                + " <div class='list-item-control material-icons'>keyboard_arrow_up</div>"
-                                + " <div class='list-item-control material-icons'>keyboard_arrow_down</div>"
-                                + " <div class='list-item-control material-icons'>close</div>"
-                                + "</div>";
-            itemsListDiv.innerHTML += listItemElement;*/
+            listItemElement.appendChild(listControls);
 
             itemsListDiv.appendChild(listItemElement);
         }

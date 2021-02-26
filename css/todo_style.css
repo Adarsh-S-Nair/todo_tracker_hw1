@@ -7,7 +7,7 @@
     --swatch-foundation:    #d9d6cc; /* USED FOR BODY BACKGROUND */
     --swatch-primary:       #40454e; /* DOMINANT COLOR, USED FOR MOST BACKGROUNDS */
     --swatch-complement:    #353a44; /* USED IN CONTRAST BACKGROUND FOR TOOLBARS */
-    --swatch-contrast:      #111111; /* USED IN MOUSE-OVER SELECTION OF LARGE ELEMENTS */
+    --swatch-contrast:      #212121; /* USED IN MOUSE-OVER SELECTION OF LARGE ELEMENTS */
     --swatch-accent:        #ffc819; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */  
 
     --swatch-text:          #e9edf0; /* USED IN MOUSE-OVER SELECTION OF TEXT AND BORDERS */ 
@@ -41,6 +41,23 @@ body{
 
 [id^="list-context-menu-"] {
     background: #25272c;
+}
+
+[id^="list-element-"] {
+    color: #9c9c9c;
+}
+
+.selected-list {
+    background-color: var(--swatch-primary);
+    color: var(--swatch-text);
+}
+
+.complete {
+    color: #8ed4f8;
+}
+
+.incomplete {
+    color: #f5bc75;
 }
 
 #lists-list {
@@ -81,6 +98,32 @@ body{
     font-weight: bold;
     border-bottom: solid;
     border-width:thin;
+}
+
+.list-item-card:hover {
+    background-color: var(--swatch-contrast);
+}
+
+input[type="text"] {
+    font: var(--font-primary);
+    background-color: var(--swatch-primary);
+    color: var(--swatch-text);
+}
+
+input[type=date]{
+    font: var(--font-primary);
+    background-color: var(--swatch-primary);
+    color: var(--swatch-text);
+}
+
+select {
+    font: var(--font-primary);
+    background-color: var(--swatch-primary);
+    color: var(--swatch-text);
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 .todo_button {
