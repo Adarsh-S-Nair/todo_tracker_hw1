@@ -2,9 +2,14 @@ body {
     overflow: hidden;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
 #sub-container {
     display: flex;
     margin: 0.5% 0.5%;
+    height: 93vh;
 }
 
 #navbar {
@@ -23,7 +28,8 @@ body {
     user-select: none;
     min-width: 220px;
     max-width: 300px;
-    width: 20vw;
+    display: flex;
+    flex-direction: column;
 }
 
 #sidebar-header {
@@ -53,6 +59,11 @@ body {
 }
 #redo {
     padding: 0px 0.2vh
+}
+
+#lists-list{
+    flex-direction: column;
+    overflow: auto;
 }
 
 [id^="list-context-menu-"] {
@@ -101,9 +112,9 @@ body {
 
 #list-items{
     width: 95%;
-    height: 85vh;
     display: flex;
     flex-direction: column;
+    overflow:auto;
 }
 
 input[type="text"] {

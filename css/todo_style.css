@@ -20,6 +20,18 @@ body{
     background-color: var(--swatch-foundation);
 }
 
+::-webkit-scrollbar-track {
+    background: var(--swatch-contrast);
+  }
+
+::-webkit-scrollbar-thumb {
+    background: #a7a7a7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(146, 146, 146);
+  }
+
 #grid-container {
     background-color: var(--swatch-foundation);
     font-family: var(--font-primary);
