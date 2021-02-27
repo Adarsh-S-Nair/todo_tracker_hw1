@@ -29,7 +29,6 @@ export default class ToDoView {
             }
             listElement.innerHTML = newList.name;
             listElement.contentEditable = false;
-            console.log(newList.getName());
         }
         
         // 'ENTER' KEY BLURS LIST ELEMENT
@@ -116,124 +115,28 @@ export default class ToDoView {
             listItemElement.setAttribute("id", "todo-list-item-" + listItem.id);
             listItemElement.setAttribute("class", "list-item-card");
 
-            // BUILD THE TASK ELEMENT AND MAKE IT EDITABLE ON CLICK
+            // BUILD THE TASK ELEMENT
             let taskElement = document.createElement("div");
+            taskElement.setAttribute("id", "task-" + listItem.id);
             taskElement.setAttribute("class", "task-col");
             taskElement.innerHTML += listItem.description;
-            taskElement.onclick = createTaskInput;
+            taskElement.onclick = () => {this.editTask(listItem, taskElement);};
 
-            function createTaskInput(){
-                let taskInput = document.createElement("input");
-                taskInput.type = "text";
-                taskInput.value = listItem.description;
-                listItemElement.replaceChild(taskInput, taskElement);
-                taskInput.focus();
-                taskInput.onblur = () => {
-                    if(taskInput.value == ""){
-                        listItem.setDescription("No Description");
-                    }
-                    else{
-                        listItem.setDescription(taskInput.value);
-                    }
-                    taskElement.innerHTML = listItem.description;
-                    listItemElement.replaceChild(taskElement, taskInput);
-                    console.log(listItem.description);
-                    taskElement.onclick = createTaskInput;
-                }
-                taskInput.addEventListener("keydown", (e) => {
-                    if(e.keyCode === 13){
-                        taskInput.blur();
-                    }
-                });
-            }
-
-            listItemElement.appendChild(taskElement);
-
-            // BUILD THE DATE ELEMENT AND MAKE IT EDITABLE ON CLICK
+            // BUILD THE DATE ELEMENT
             let dateElement = document.createElement("div");
             dateElement.setAttribute("class", "due-date-col");
             dateElement.innerHTML += listItem.dueDate;
-            dateElement.onclick = createDatePicker;
+            dateElement.onclick = () => {this.editDate(listItem, dateElement);};
 
-            function createDatePicker() {
-                let datePicker = document.createElement("input");
-                datePicker.type = "date";
-                datePicker.value = listItem.getDueDate();
-                listItemElement.replaceChild(datePicker, dateElement);
-                datePicker.focus();
-                datePicker.onblur = () => {
-                    if(datePicker.value == ""){
-                        listItem.setDueDate("No Date");
-                    }
-                    else{
-                        listItem.setDueDate(datePicker.value);
-                    }
-                    dateElement.innerHTML = listItem.dueDate;
-                    listItemElement.replaceChild(dateElement, datePicker);
-                    console.log(listItem.getDueDate());
-                    dateElement.onclick = createDatePicker;
-                };
-                datePicker.addEventListener("keydown", (e) => {
-                    if(e.keyCode === 13){
-                        datePicker.blur();
-                    }
-                });
-            };
-
-            listItemElement.appendChild(dateElement);
-
-            // BUILD THE STATUS ELEMENT AND MAKE IT EDITABLE ON CLICK
+            // BUILD THE STATUS ELEMENT
             let statusElement = document.createElement("div");
-            if(listItem.status == "complete"){
-                statusElement.setAttribute("class", "status-col complete");   
-            }
-            else{
-                statusElement.setAttribute("class", "status-col incomplete"); 
-            }
+            if(listItem.status == "complete")
+                {statusElement.setAttribute("class", "status-col complete");}
+            else {statusElement.setAttribute("class", "status-col incomplete");}
             statusElement.innerHTML += listItem.status;
-            statusElement.onclick = createStatusOptions;
-            
-            function createStatusOptions() {
-                let statusOptions = document.createElement("select");
-                listItemElement.replaceChild(statusOptions, statusElement);
-                statusOptions.focus();
+            statusElement.onclick = () => {this.editStatus(listItem, statusElement)};
 
-                let completeOption = document.createElement("option");
-                completeOption.innerText = "complete";
-                let incompleteOption = document.createElement("option");
-                incompleteOption.innerText = "incomplete";
-                statusOptions.appendChild(completeOption);
-                statusOptions.appendChild(incompleteOption);
-
-                if(listItem.status == "complete"){
-                    statusOptions.value = "complete";
-                }
-                else{
-                    statusOptions.value = "incomplete";
-                }
-
-                statusOptions.onblur = () => {
-                    listItem.setStatus(statusOptions.value);
-                    statusElement.innerHTML = listItem.status;
-                    listItemElement.replaceChild(statusElement, statusOptions);
-                    if(listItem.status == "complete"){
-                        statusElement.setAttribute("class", "status-col complete");   
-                    }
-                    else{
-                        statusElement.setAttribute("class", "status-col incomplete"); 
-                    }
-                    console.log(listItem.getStatus());
-                    statusElement.onclick = createStatusOptions;
-                };
-                statusOptions.addEventListener("keydown", (e) => {
-                    if(e.keyCode === 13){
-                        statusOptions.blur();
-                    }
-                });
-            };
-
-            listItemElement.appendChild(statusElement);
-
+            // BUILD THE LIST CONTROLS
             let listControls = document.createElement("div");
             listControls.setAttribute("id", "list-controls");
             let upArrow = document.createElement("div");
@@ -243,20 +146,8 @@ export default class ToDoView {
                 upArrow.style.filter = "invert(0.6)";
                 upArrow.style.cursor = "default";
             }
-            else {
-                upArrow.onclick = () => {
-                    let index = -1;
-                    for(let i = 0; (i < list.items.length) && (index < 0); i++){
-                        if(listItem === list.items[i]){
-                            index = i;
-                        }
-                    }
-                    let temp = listItem;
-                    list.items[i] = list.items[i-1];
-                    list.items[i-1] = temp;
-                    this.viewList(list);
-                };
-            }
+            else {upArrow.onclick = () => {this.controller.moveItemUp(listItem)};}
+
             let downArrow = document.createElement("div");
             downArrow.setAttribute("class", "list-item-control material-icons control_button");
             downArrow.innerText = "keyboard_arrow_down";
@@ -264,36 +155,136 @@ export default class ToDoView {
                 downArrow.style.filter = "invert(0.6)";
                 downArrow.style.cursor = "default";
             }
-            else {
-                downArrow.onclick = () => {
-                    let index = -1;
-                    for(let i = 0; (i < list.items.length) && (index < 0); i++){
-                        if(listItem === list.items[i]){
-                            index = i;
-                        }
-                    }
-                    let temp = listItem;
-                    list.items[i] = list.items[i+1];
-                    list.items[i+1] = temp;
-                    this.viewList(list);
-                };
-            }
+            else {downArrow.onclick = () => {this.controller.moveItemDown(listItem)};}
+
             let close = document.createElement("div");
             close.setAttribute("class", "list-item-control material-icons control_button");
             close.innerText = "close";
-            close.onclick = () => {
-                list.removeItem(listItem);
-                this.viewList(list);
-            };
+            close.onclick = () => {this.controller.deleteItem(listItem)};
 
             listControls.appendChild(upArrow);
             listControls.appendChild(downArrow);
             listControls.appendChild(close);
 
+            // APPEND THE ELEMENTS TO THE ITEM CARD
+            listItemElement.appendChild(taskElement);
+            listItemElement.appendChild(dateElement);
+            listItemElement.appendChild(statusElement);
             listItemElement.appendChild(listControls);
 
+            // APPEND THE ITEM CARD TO THE LIST DIV
             itemsListDiv.appendChild(listItemElement);
         }
+    }
+
+    editTask(listItem, taskElement) {
+        let listItemElement = document.getElementById("todo-list-item-" + listItem.getId());
+        let taskInput = document.createElement("input");
+        taskInput.type = "text";
+        taskInput.value = listItem.description;
+        listItemElement.replaceChild(taskInput, taskElement);
+        taskInput.focus();
+        taskInput.onblur = () => {
+            this.controller.changeTask(listItem, taskInput.value);
+            listItemElement.replaceChild(taskElement, taskInput);
+            taskElement.onclick = () => {this.editTask(listItem, taskElement);};
+        }
+        taskInput.addEventListener("keydown", (e) => {
+            if(e.keyCode === 13){
+                taskInput.blur();
+            }
+        });
+    }
+
+    editDate(listItem, dateElement) {
+        let listItemElement = document.getElementById("todo-list-item-" + listItem.getId());
+        let datePicker = document.createElement("input");
+        datePicker.type = "date";
+        datePicker.value = listItem.dueDate;
+        listItemElement.replaceChild(datePicker, dateElement);
+        datePicker.focus();
+        datePicker.onblur = () => {
+            this.controller.changeDate(listItem, datePicker.value);
+            listItemElement.replaceChild(dateElement, datePicker);
+            dateElement.onclick = () => {this.editDate(listItem, dateElement);};
+        };
+        datePicker.addEventListener("keydown", (e) => {
+            if(e.keyCode === 13){
+                datePicker.blur();
+            }
+        });
+    }
+
+    editStatus(listItem, statusElement) {
+        let listItemElement = document.getElementById("todo-list-item-" + listItem.getId());
+        let statusOptions = document.createElement("select");
+        listItemElement.replaceChild(statusOptions, statusElement);
+        statusOptions.focus();
+
+        let completeOption = document.createElement("option");
+        completeOption.innerText = "complete";
+        let incompleteOption = document.createElement("option");
+        incompleteOption.innerText = "incomplete";
+        statusOptions.appendChild(completeOption);
+        statusOptions.appendChild(incompleteOption);
+
+        statusOptions.value = listItem.status;
+
+        statusOptions.onblur = () => {
+            this.controller.changeStatus(listItem, statusOptions.value);
+            listItemElement.replaceChild(statusElement, statusOptions);
+            if(listItem.status == "complete") { statusElement.setAttribute("class", "status-col complete"); }
+            else{ statusElement.setAttribute("class", "status-col incomplete"); }
+            statusElement.onclick = () => {this.editStatus(listItem, statusElement);};
+        };
+        statusOptions.addEventListener("keydown", (e) => {
+            if(e.keyCode === 13){
+                statusOptions.blur();
+            }
+        });
+    }
+
+    updateUndoRedoButtons(tps) {
+        let undo = document.getElementById("undo");
+        let redo = document.getElementById("redo");
+
+        if(tps.hasTransactionToUndo()) {
+            undo.classList.remove("inactive");
+            undo.classList.add("active");
+        }
+        else {
+            undo.classList.remove("active");
+            undo.classList.add("inactive");
+        }
+
+        if(tps.hasTransactionToRedo()) {
+            redo.classList.remove("inactive");
+            redo.classList.add("active");
+        }
+        else {
+            redo.classList.remove("active");
+            redo.classList.add("inactive");
+        }
+    }
+
+    deleteListModal(){
+        let overlay = document.createElement("div");
+        overlay.className += "overlay";
+        document.body.appendChild(overlay);
+        let popup = document.getElementById("delete-confirmation");
+        popup.style.display = "block";
+        let cancel = document.getElementById("cancel-button");
+        cancel.onclick = () => {
+            document.body.removeChild(overlay);
+            popup.style.display = "none";
+        };
+        let confirm = document.getElementById("confirm-delete");
+        confirm.onclick = () => {
+            this.listControlsVisible(false);
+            document.body.removeChild(overlay);
+            popup.style.display = "none";
+            this.controller.removeCurrentList();
+        };
     }
 
     // THE VIEW NEEDS THE CONTROLLER TO PROVIDE PROPER RESPONSES

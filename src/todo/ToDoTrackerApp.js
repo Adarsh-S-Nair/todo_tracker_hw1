@@ -48,16 +48,6 @@ export class ToDoTrackerApp {
     }
 }
 
-/*document.addEventListener("click", closeContextMenus);
-function closeContextMenus() {
-    var contextMenus = document.querySelectorAll('[id^="list-context-menu-"]');
-    for(let i = 0; i < contextMenus.length; i++){
-        if(contextMenus[i].style.display == 'block'){
-            contextMenus[i].style.display = 'none';
-        }
-    }
-}*/
-
 window.onload = function() {
     // MAKE THE APP AND LAUNCH IT
     let app = new ToDoTrackerApp();

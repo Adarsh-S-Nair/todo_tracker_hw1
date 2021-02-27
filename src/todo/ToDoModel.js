@@ -4,6 +4,12 @@ import ToDoList from './ToDoList.js'
 import ToDoListItem from './ToDoListItem.js'
 import jsTPS from '../common/jsTPS.js'
 import AddNewItem_Transaction from './transactions/AddNewItem_Transaction.js'
+import ChangeTask_Transaction from './transactions/ChangeTask_Transaction.js'
+import ChangeDate_Transaction from './transactions/ChangeDate_Transaction.js'
+import ChangeStatus_Transaction from './transactions/ChangeStatus_Transaction.js'
+import MoveItemUp_Transaction from './transactions/MoveItemUp_Transaction.js'
+import MoveItemDown_Transaction from './transactions/MoveItemDown_Transaction.js'
+import DeleteItem_Transaction from './transactions/DeleteItem_Transaction.js'
 
 /**
  * ToDoModel
@@ -62,8 +68,13 @@ export default class ToDoModel {
         newItem.setStatus(initStatus);
         list.addItem(newItem);
         if (this.currentList) {
-            this.view.refreshList(list);
+            this.view.refreshLists(list);
         }
+    }
+
+    addItemToList(item) {
+        this.currentList.addItem(item);
+        this.view.viewList(this.currentList);
     }
 
     /**
@@ -74,7 +85,45 @@ export default class ToDoModel {
     addNewItemTransaction() {
         let transaction = new AddNewItem_Transaction(this);
         this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
     }
+
+    changeTaskTransaction(listItem, task) {
+        let transaction = new ChangeTask_Transaction(this, listItem, task);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
+    changeDateTransaction(listItem, date) {
+        let transaction = new ChangeDate_Transaction(this, listItem, date);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
+    changeStatusTransaction(listItem, status) {
+        let transaction = new ChangeStatus_Transaction(this, listItem, status);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
+    moveItemUpTransaction(listItem) {
+        let transaction = new MoveItemUp_Transaction(this, listItem);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
+    moveItemDownTransaction(listItem) {
+        let transaction = new MoveItemDown_Transaction(this, listItem);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
+    deleteItemTransaction(listItem) {
+        let tranasction = new DeleteItem_Transaction(this, listItem);
+        this.tps.addTransaction(tranasction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
 
     /**
      * addNewList
@@ -119,7 +168,7 @@ export default class ToDoModel {
      * Load the items for the listId list into the UI.
      */
     loadList(listId) {
-
+        this.tps.clearAllTransactions();
         let listIndex = -1;
         for (let i = 0; i < this.toDoLists.length; i++) {
             if (this.toDoLists[i].id === listId) {
@@ -136,6 +185,7 @@ export default class ToDoModel {
             this.view.viewList(this.currentList);
             this.moveListToTop(this.currentList);
             this.view.refreshLists(this.toDoLists);
+            this.view.updateUndoRedoButtons(this.tps);
         }
     }
 
@@ -146,6 +196,55 @@ export default class ToDoModel {
         this.toDoLists.unshift(list);
     }
 
+    editTask(listItem, task) {
+        let oldTask = listItem.description;
+        listItem.description = (task == "") ? "No description" : task;
+        this.view.viewList(this.currentList);
+        return oldTask;
+    }
+
+    editDate(listItem, date) {
+        let oldDate = listItem.dueDate;
+        listItem.dueDate = (date == "") ? "No Date" : date;
+        this.view.viewList(this.currentList);
+        return oldDate;
+    }
+
+    editStatus(listItem, status) {
+        let oldStatus = listItem.status;
+        listItem.status = status;
+        this.view.viewList(this.currentList);
+        return oldStatus;
+    }
+
+    moveItemUp(listItem) {
+        let list = this.currentList;
+        let index = -1;
+        for(let i = 0; (i < list.items.length) && (index < 0); i++){
+            if(listItem === list.items[i]){
+                index = i;
+            }
+        }
+        let temp = listItem;
+        list.items[index] = list.items[index-1];
+        list.items[index-1] = temp;
+        this.view.viewList(list);
+    }
+
+    moveItemDown(listItem) {
+        let list = this.currentList;
+        let index = -1;
+        for(let i = 0; (i < list.items.length) && (index < 0); i++){
+            if(listItem === list.items[i]){
+                index = i;
+            }
+        }
+        let temp = listItem;
+        list.items[index] = list.items[index+1];
+        list.items[index+1] = temp;
+        this.view.viewList(list);
+    }
+
     /**
      * Redo the current transaction if there is one.
      */
@@ -153,6 +252,7 @@ export default class ToDoModel {
         if (this.tps.hasTransactionToRedo()) {
             this.tps.doTransaction();
         }
+        this.view.updateUndoRedoButtons(this.tps);
     }   
 
     /**
@@ -161,32 +261,25 @@ export default class ToDoModel {
     removeItem(itemToRemove) {
         this.currentList.removeItem(itemToRemove);
         this.view.viewList(this.currentList);
+        return itemToRemove;
+    }
+
+    selectList(list) {
+        for(let i = 0; i < this.toDoLists.length; i++) {
+            this.toDoLists[i].selected = false;
+        }
+        list.selected = true;
     }
 
     deleteListConfirmation() {
-        let overlay = document.createElement("div");
-        overlay.className += "overlay";
-        document.body.appendChild(overlay);
-        let popup = document.getElementById("delete-confirmation");
-        popup.style.display = "block";
-        let cancel = document.getElementById("cancel-button");
-        cancel.onclick = () => {
-            document.body.removeChild(overlay);
-            popup.style.display = "none";
-        };
-        let confirm = document.getElementById("confirm-delete");
-        confirm.onclick = () => {
-            this.view.listControlsVisible(false);
-            document.body.removeChild(overlay);
-            popup.style.display = "none";
-            this.removeCurrentList();
-        };
+        this.view.deleteListModal();
     }
 
     /**
      * Finds and then removes the current list.
      */
     removeCurrentList() {
+        this.tps.clearAllTransactions();
         let indexOfList = -1;
         for (let i = 0; (i < this.toDoLists.length) && (indexOfList < 0); i++) {
             if (this.toDoLists[i].id === this.currentList.id) {
@@ -197,9 +290,11 @@ export default class ToDoModel {
         this.currentList = null;
         this.view.clearItemsList();
         this.view.refreshLists(this.toDoLists);
+        this.view.updateUndoRedoButtons(this.tps);
     }
 
     closeList() {
+        this.tps.clearAllTransactions();
         for(let i = 0; i < this.toDoLists.length; i++ ){
             if(this.toDoLists[i].getSelected() === true) {
                 this.toDoLists[i].setSelected(false);
@@ -209,6 +304,7 @@ export default class ToDoModel {
         this.view.listControlsVisible(false);
         this.view.clearItemsList();
         this.view.refreshLists(this.toDoLists);
+        this.view.updateUndoRedoButtons(this.tps);
     }
 
     // WE NEED THE VIEW TO UPDATE WHEN DATA CHANGES.
@@ -223,5 +319,6 @@ export default class ToDoModel {
         if (this.tps.hasTransactionToUndo()) {
             this.tps.undoTransaction();
         }
+        this.view.updateUndoRedoButtons(this.tps);
     } 
 }

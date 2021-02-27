@@ -21,6 +21,26 @@ body{
     background-color: var(--swatch-foundation);
 }
 
+#undo.inactive {
+    cursor: default;
+    filter: invert(0.6);
+}
+
+#redo.inactive {
+    cursor: default;
+    filter: invert(0.6);
+}
+
+#undo.active {
+    cursor: pointer;
+    filter: invert(0);
+}
+
+#redo.active {
+    cursor: pointer;
+    filter: invert(0);
+}
+
 .overlay {
     background-color:#00000077;
     position: fixed;
