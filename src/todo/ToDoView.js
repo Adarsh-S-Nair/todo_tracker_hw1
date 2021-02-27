@@ -267,6 +267,20 @@ export default class ToDoView {
         }
     }
 
+    addListButtonEnabled(bool){
+        let button = document.getElementById("add-list");
+        if (bool) {
+            button.classList.remove("inactive");
+            button.classList.add("active")
+            button.onclick = () => {this.controller.addNewList();};
+        }
+        else{
+            button.classList.remove("active");
+            button.classList.add("inactive")
+            button.onclick = () => {};
+        }
+    }
+
     deleteListModal(){
         let overlay = document.createElement("div");
         overlay.className += "overlay";

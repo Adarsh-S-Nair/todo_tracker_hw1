@@ -14,22 +14,22 @@ export default class ToDoController {
         let appModel = this.model;
 
         // SETUP ALL THE EVENT HANDLERS SINCE THEY USE THE MODEL
-        document.getElementById("add-list").onmousedown = function() {
+        document.getElementById("add-list").onclick = function() {
             appModel.addNewList();
         }
-        document.getElementById("undo").onmousedown = function() {
+        document.getElementById("undo").onclick = function() {
             appModel.undo();
         }
-        document.getElementById("redo").onmousedown = function() {
+        document.getElementById("redo").onclick = function() {
             appModel.redo();
         }
-        document.getElementById("delete-list-button").onmousedown = function() {
+        document.getElementById("delete-list-button").onclick = function() {
             appModel.deleteListConfirmation();
         }
-        document.getElementById("add-item-button").onmousedown = function() {
+        document.getElementById("add-item-button").onclick = function() {
             appModel.addNewItemTransaction();
         }
-        document.getElementById("close-list-button").onmousedown = function() {
+        document.getElementById("close-list-button").onclick = function() {
             appModel.closeList();
         }
     }
@@ -38,6 +38,10 @@ export default class ToDoController {
     handleLoadList(listId) {
         // UNLOAD THE CURRENT LIST AND INSTEAD LOAD THE CURRENT LIST
         this.model.loadList(listId);
+    }
+
+    addNewList() {
+        this.model.addNewList();
     }
 
     changeTask(listItem, task) {

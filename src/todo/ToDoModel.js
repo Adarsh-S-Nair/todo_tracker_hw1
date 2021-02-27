@@ -186,6 +186,7 @@ export default class ToDoModel {
             this.moveListToTop(this.currentList);
             this.view.refreshLists(this.toDoLists);
             this.view.updateUndoRedoButtons(this.tps);
+            this.view.addListButtonEnabled(false);
         }
     }
 
@@ -291,6 +292,7 @@ export default class ToDoModel {
         this.view.clearItemsList();
         this.view.refreshLists(this.toDoLists);
         this.view.updateUndoRedoButtons(this.tps);
+        this.view.addListButtonEnabled(true);
     }
 
     closeList() {
@@ -305,6 +307,7 @@ export default class ToDoModel {
         this.view.clearItemsList();
         this.view.refreshLists(this.toDoLists);
         this.view.updateUndoRedoButtons(this.tps);
+        this.view.addListButtonEnabled(true);
     }
 
     // WE NEED THE VIEW TO UPDATE WHEN DATA CHANGES.

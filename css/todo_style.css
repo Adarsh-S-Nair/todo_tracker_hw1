@@ -21,22 +21,12 @@ body{
     background-color: var(--swatch-foundation);
 }
 
-#undo.inactive {
+.sidebar-controls *.inactive {
     cursor: default;
     filter: invert(0.6);
 }
 
-#redo.inactive {
-    cursor: default;
-    filter: invert(0.6);
-}
-
-#undo.active {
-    cursor: pointer;
-    filter: invert(0);
-}
-
-#redo.active {
+.sidebar-controls *.active {
     cursor: pointer;
     filter: invert(0);
 }
