@@ -115,7 +115,7 @@ body{
 
 .selected-list {
     background-color: var(--swatch-primary);
-    color: var(--swatch-text);
+    color: var(--swatch-text-accent);
 }
 
 .complete {

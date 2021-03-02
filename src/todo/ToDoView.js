@@ -20,14 +20,10 @@ export default class ToDoView {
         listElement.setAttribute("class", "todo_button list");
 
         // UPDATE LIST NAME ON BLUR
-        listElement.onblur = () => {
-            if(listElement.innerHTML == ""){
-                newList.setName("Untitled");
+        listElement.blur = () => {
+            if(listElement.innerText != newList.name){
+                this.controller.changeName(listElement.innerText);
             }
-            else{
-                newList.setName(listElement.innerHTML);
-            }
-            listElement.innerHTML = newList.name;
             listElement.contentEditable = false;
         }
         
@@ -185,7 +181,9 @@ export default class ToDoView {
         listItemElement.replaceChild(taskInput, taskElement);
         taskInput.focus();
         taskInput.onblur = () => {
-            this.controller.changeTask(listItem, taskInput.value);
+            if(taskElement.innerText != taskInput.value){
+                this.controller.changeTask(listItem, taskInput.value);
+            }
             listItemElement.replaceChild(taskElement, taskInput);
             taskElement.onclick = () => {this.editTask(listItem, taskElement);};
         }
@@ -204,7 +202,9 @@ export default class ToDoView {
         listItemElement.replaceChild(datePicker, dateElement);
         datePicker.focus();
         datePicker.onblur = () => {
-            this.controller.changeDate(listItem, datePicker.value);
+            if(dateElement.innerText != datePicker.value){
+                this.controller.changeDate(listItem, datePicker.value);
+            }
             listItemElement.replaceChild(dateElement, datePicker);
             dateElement.onclick = () => {this.editDate(listItem, dateElement);};
         };
@@ -231,7 +231,9 @@ export default class ToDoView {
         statusOptions.value = listItem.status;
 
         statusOptions.onblur = () => {
-            this.controller.changeStatus(listItem, statusOptions.value);
+            if(statusElement.innerText != statusOptions.value){
+                this.controller.changeStatus(listItem, statusOptions.value);
+            }
             listItemElement.replaceChild(statusElement, statusOptions);
             if(listItem.status == "complete") { statusElement.setAttribute("class", "status-col complete"); }
             else{ statusElement.setAttribute("class", "status-col incomplete"); }
@@ -272,7 +274,7 @@ export default class ToDoView {
         if (bool) {
             button.classList.remove("inactive");
             button.classList.add("active")
-            button.onclick = () => {this.controller.addNewList();};
+            button.onclick = () => {this.controller.addNewListSelected();};
         }
         else{
             button.classList.remove("active");

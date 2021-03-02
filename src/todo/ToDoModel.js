@@ -4,6 +4,7 @@ import ToDoList from './ToDoList.js'
 import ToDoListItem from './ToDoListItem.js'
 import jsTPS from '../common/jsTPS.js'
 import AddNewItem_Transaction from './transactions/AddNewItem_Transaction.js'
+import RenameList_Transaction from './transactions/RenameList_Transaction.js'
 import ChangeTask_Transaction from './transactions/ChangeTask_Transaction.js'
 import ChangeDate_Transaction from './transactions/ChangeDate_Transaction.js'
 import ChangeStatus_Transaction from './transactions/ChangeStatus_Transaction.js'
@@ -88,6 +89,12 @@ export default class ToDoModel {
         this.view.updateUndoRedoButtons(this.tps);
     }
 
+    renameTransaction(name) {
+        let transaction = new RenameList_Transaction(this, name);
+        this.tps.addTransaction(transaction);
+        this.view.updateUndoRedoButtons(this.tps);
+    }
+
     changeTaskTransaction(listItem, task) {
         let transaction = new ChangeTask_Transaction(this, listItem, task);
         this.tps.addTransaction(transaction);
@@ -139,6 +146,16 @@ export default class ToDoModel {
             newList.setName(initName);
         this.toDoLists.push(newList);
         this.view.appendNewListToView(newList);
+        return newList;
+    }
+
+    addNewListSelected(initName) {
+        let newList = new ToDoList(this.nextListId++);
+        if (initName)
+            newList.setName(initName);
+        this.toDoLists.push(newList);
+        this.selectList(newList);
+        this.loadList(newList.id);
         return newList;
     }
 
@@ -195,6 +212,14 @@ export default class ToDoModel {
         if(i === 0) return;
         if(i > 0) {this.toDoLists.splice(i, 1);}
         this.toDoLists.unshift(list);
+    }
+
+    renameList(name) {
+        let oldName = this.currentList.name;
+        this.currentList.name = (name == "") ? "Untitled" : name;
+        this.view.viewList(this.currentList);
+        this.view.refreshLists(this.toDoLists);
+        return oldName;
     }
 
     editTask(listItem, task) {

@@ -15,7 +15,7 @@ export default class ToDoController {
 
         // SETUP ALL THE EVENT HANDLERS SINCE THEY USE THE MODEL
         document.getElementById("add-list").onclick = function() {
-            appModel.addNewList();
+            appModel.addNewListSelected();
         }
         document.getElementById("undo").onclick = function() {
             appModel.undo();
@@ -42,6 +42,14 @@ export default class ToDoController {
 
     addNewList() {
         this.model.addNewList();
+    }
+
+    addNewListSelected() {
+        this.model.addNewListSelected();
+    }
+
+    changeName(name) {
+        this.model.renameTransaction(name);
     }
 
     changeTask(listItem, task) {
