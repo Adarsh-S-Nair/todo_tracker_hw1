@@ -110,7 +110,7 @@ body{
 }
 
 [id^="list-element-"] {
-    color: #9c9c9c;
+    color: var(--swatch-text);
 }
 
 .selected-list {
